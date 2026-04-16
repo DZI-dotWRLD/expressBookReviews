@@ -64,34 +64,54 @@ public_users.get('/isbn/:isbn', async function (req, res) {
 public_users.get('/author/:author', async function (req, res) {
   const author = req.params.author;
   //Object.values(books).filter((book)=> book.author.replace(/\s/g, "") == author);
-  try{
-    const aBook = new Promise((resolve, reject)=>{
-      let authorBook = Object.values(books).filter((book)=> book.author.replace(/\s/g, "") == author);
-      resolve(authorBook); 
-    });
+try {
+  const aBook = new Promise((resolve, reject) => {
+    let authorBook = Object.values(books).filter(
+      (book) => book.author.replace(/\s/g, "") === author
+    );
+    resolve(authorBook);
+  });
 
-    const data = await aBook;
-    res.status(200).json(data);
-  } catch(error){
-    res.status(500).json({message:"Error occure"});
+  const data = await aBook;
+
+  if (data.length === 0) {
+    return res.status(404).json({
+      message: "No books found for this author"
+    });
   }
+
+  res.status(200).json(data);
+
+} catch (error) {
+  res.status(500).json({ message: "Error occurred" });
+}
 });
 
 // Get all books based on title
 public_users.get('/title/:title', async function (req, res) {
  const title = req.params.title;
 
-   try{
-    const tBook = new Promise((resolve, reject)=>{
-      let titleBook = Object.values(books).filter((book)=> book.title.replace(/\s/g, "") == title);
-      resolve(titleBook); 
-    });
+  try {
+  const tBook = new Promise((resolve, reject) => {
+    let titleBook = Object.values(books).filter(
+      (book) => book.title.replace(/\s/g, "") === title
+    );
+    resolve(titleBook);
+  });
 
-    const data = await tBook;
-    res.status(200).json(data);
-  } catch(error){
-    res.status(500).json({message:"Error occure"});
+  const data = await tBook;
+
+  if (data.length === 0) {
+    return res.status(404).json({
+      message: "No books found with this title"
+    });
   }
+
+  res.status(200).json(data);
+
+} catch (error) {
+  res.status(500).json({ message: "Error occurred" });
+}
 });
 
 //  Get book review
